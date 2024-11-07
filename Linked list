@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+struct Node* createLinkedList(int elements[], int size) {
+    struct Node* head = NULL;
+    struct Node* temp = NULL;
+
+    for (int i = 0; i < size; i++) {
+        struct Node* newNode = createNode(elements[i]);
+        if (head == NULL) {
+            head = newNode;
+        } else {
+            temp->next = newNode;
+        }
+        temp = newNode;
+    }
+    return head;
+}
+
+struct Node* insertAtFirst(struct Node* head, int data) {
+    struct Node* newNode = createNode(data);
+    newNode->next = head;
+    head = newNode;
+    return head;
+}
+
+struct Node* insertAtEnd(struct Node* head, int data) {
+    struct Node* newNode = createNode(data);
+    if (head == NULL) {
+        head = newNode;
+        return head;
+    }
+    struct Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    return head;
+}
+
+struct Node* insertAtPosition(struct Node* head, int data, int position) {
+    struct Node* newNode = createNode(data);
+    
+    if (position == 1) {
+        return insertAtFirst(head, data);
+    }
+    
+    struct Node* temp = head;
+    int count = 1;
+    
+    while (temp != NULL && count < position - 1) {
+        temp = temp->next;
+        count++;
+    }
+    
+    if (temp == NULL) {
+        printf("Position out of bounds!\n");
+        return head;
+    }
+    
+    newNode->next = temp->next;
+    temp->next = newNode;
+    
+    return head;
+}
+
+void displayLinkedList(struct Node* head) {
+    if (head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    int elements[] = {10, 20, 30, 40};
+    int size = sizeof(elements) / sizeof(elements[0]);
+
+    struct Node* head = createLinkedList(elements, size);
+    printf("Original Linked List:\n");
+    displayLinkedList(head);
+
+    head = insertAtFirst(head, 5);
+    printf("Linked List after inserting 5 at the beginning:\n");
+    displayLinkedList(head);
+
+    head = insertAtPosition(head, 25, 3);
+    printf("Linked List after inserting 25 at position 3:\n");
+    displayLinkedList(head);
+
+    head = insertAtEnd(head, 50);
+    printf("Linked List after inserting 50 at the end:\n");
+    displayLinkedList(head);
+
+    return 0;
+}
